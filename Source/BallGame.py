@@ -1,3 +1,7 @@
+'''
+BallGame Version 1.0
+'''
+
 from tkinter import *
 import time
 
