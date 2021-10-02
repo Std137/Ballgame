@@ -2,53 +2,51 @@
 BallGame Version 1.0
 '''
 
-from tkinter import *
-import time
-
-def on_closing():
-    global window
-    window.destroy()  # Закрыть окно
+from tkinter import *   #подключаем библиотеку управления окнами и виджетами
 
 def PaintBall(paint_command, x_coord, y_coord):
     '''
-    Функция PaintBell - Рисование мяча на экране
+    Функция PaintBall - Рисование мяча на экране
     paint_command - 1- Нарисовать мяч, красным. 2 - Нарисовать мяч черным
     x_coord - Координата X
     y_coord - Координата Y
     '''
-    if paint_command == 1:
-        fill_color = 'red'
-        out_color = 'white'
+    if paint_command == 1:    #проверяем рисовать круг красным?
+        fill_color = 'red'    #если да, то устанавливаем заливку круга красным.
+        out_color = 'white'   #если да, то устанавливаем заливку контура белым.
     else:
-        fill_color = 'black'
-        out_color = 'black'
-    holst.create_oval(x_coord, y_coord, x_coord+30, y_coord+30, fill=fill_color, outline=out_color)#Рисуем мяч на холсте
+        fill_color = 'black'  #если нет, то устанавливаем заливку круга чёрным.
+        out_color = 'black'   #если нет, то устанавливаем заливку контура чёрным.
+    holst.create_oval(x_coord, y_coord, x_coord+30, y_coord+30, fill=fill_color, outline=out_color)
+    #Рисуем мяч на холсте
     
 
 def MoveBall():
-    global x_start
-    global y_start
-    global step
-    holst.after(2000,MoveBall)
-    PaintBall(2,x_start,y_start)
-    x_start=x_start+step
-    if (x_start+step) > 170:
-        step = -10
-    elif (x_start+step) < 1:
-        step = 10
-    x_start=x_start+step
-    PaintBall(1,x_start,y_start)
+    '''
+    функция MoveBall - управление движением мяча 
+    '''
+    global x_start    #функция использует глобальную версию переменной.
+    global y_start    #функция использует глобальную версию переменной.
+    global step    #функция использует глобальную версию переменной.
 
-x_start=100
-y_start=100
-step=10
+    PaintBall(2,x_start,y_start) #стираем старое изображение мяча.
+    if (x_start+step) > 170: #если следующий шаг выходит за границу окна справа.
+        step = -10 #меняем направление: движение влево.
+    elif (x_start+step) < 1: #если следующий шаг выходит за границу окна слева.
+        step = 10 #меняем направление: движение вправо.
+    x_start=x_start+step #задаём новое значение координаты Х
+    PaintBall(1,x_start,y_start) #рисуем мяч в новом положении.
+    holst.after(200,MoveBall) #вызвать функцию MoveBall движения через 200 милисекунд.
+
+x_start=100 #создаём переменную и задаём текущее положение мяча по координате X.
+y_start=100 #создаём переменную и задаём текущее положение мяча по координате Y.
+step=10 #создаём переменную и задаём шаг движения вправо.
+
 window = Tk() #Создаем окно
 window.title("Сбежавший мячик!!!") #Выводим название программы в окне
 window.geometry("200x200+100+100") #задаем размер окна
-window.protocol("WM_DELETE_WINDOW", on_closing)
-holst = Canvas(window, width=200, height=200, bg='black') #Задаем окно, размер, и цвет холста
+holst = Canvas(window, width=200, height=200, bg='black') #Задаем родительское окно, размер, и цвет холста
 holst.pack() #Рисуем холст в окне
-PaintBall(1,x_start,y_start)
-holst.after_idle(MoveBall)
-window.mainloop()
-
+PaintBall(1,x_start,y_start) #рисуем мяч в стартовом положении.
+holst.after_idle(MoveBall) #после настройки экрана запускаем движние мяча.
+window.mainloop() #запускаем бесконечный цикл до закрытия окна.
